@@ -1,1 +1,1 @@
-# individual-project
+# Индивидуальный проект Мухтабалиева Дамира(miniapp in telegram)
