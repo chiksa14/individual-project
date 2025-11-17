@@ -1,0 +1,21 @@
+.container {
+  margin: 5px;
+  padding: 5px;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  color: rgb(255, 162, 0);
+  font-size: 14px;
+}
+
+.btn-go-study {
+  background-color: aquamarine;
+  border-radius: 40px;
+}
+
+.ayat-dnya {
+  background-color: rgb(0, 255, 94);
+  border-radius: 40px;
+}
