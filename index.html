@@ -1,56 +1,724 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>miniapp</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuranFlow Academy - Изучение арабского и Корана</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <div class="container">
-    <div class="menu-top">
-      <h1 class="greeting">Ассаляму алейкум 👋</h1>
-      <p class="infoMenu-top">Изучение арабского</p>
-      <div class="progress-menu-users">
-        <h3>Текущий курс</h3>
-        <ul class="progressBooks">
-          <li>Бейна Ядейк</li>
-          <li>Том 1</li>
-          <li>Глава 3</li>
-        </ul>
-        <progress value="30" max="100"></progress>
-        <progress value="65" max="100"></progress>
-      </div>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-book-quran"></i>
+                <span>QuranFlow</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#dashboard" class="nav-link active" data-page="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Главная</span>
+                </a>
+                <a href="#courses" class="nav-link" data-page="courses">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Курсы</span>
+                </a>
+                <a href="#flashcards" class="nav-link" data-page="flashcards">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Карточки</span>
+                </a>
+                <a href="#useful" class="nav-link" data-page="useful">
+                    <i class="fas fa-star"></i>
+                    <span>Полезное</span>
+                </a>
+                <a href="#profile" class="nav-link" data-page="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Профиль</span>
+                </a>
+            </div>
+            <div class="user-info">
+                <span id="userName">Гость</span>
+                <div class="badge" id="dailyCards">5/5</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="main-content" id="mainContent">
+        <!-- Dashboard -->
+        <section class="page active" id="dashboard">
+            <div class="welcome-section">
+                <h1>Ас-саляму алейкум, <span id="userGreeting">Дорогой ученик</span>!</h1>
+                <p class="subtitle">Добро пожаловать в школу арабского языка и Корана</p>
+                
+                <div class="quick-actions">
+                    <div class="action-card" data-action="continue-lesson">
+                        <i class="fas fa-play-circle"></i>
+                        <span>Продолжить урок</span>
+                    </div>
+                    <div class="action-card" data-action="flashcards">
+                        <i class="fas fa-layer-group"></i>
+                        <span>Мои карточки</span>
+                    </div>
+                    <div class="action-card" data-action="prayer-time">
+                        <i class="fas fa-clock"></i>
+                        <span>Намаз</span>
+                    </div>
+                </div>
+
+                <div class="notification">
+                    <i class="fas fa-bell"></i>
+                    <div>
+                        <strong>Ближайшее занятие:</strong>
+                        <p id="nextLesson">Сегодня в 19:00 - Арабский для начинающих</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-fire text-primary"></i>
+                    <div>
+                        <h3 id="streakDays">14</h3>
+                        <p>Дней подряд</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-book text-success"></i>
+                    <div>
+                        <h3 id="wordsLearned">42</h3>
+                        <p>Слов изучено</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star text-warning"></i>
+                    <div>
+                        <h3 id="progressPercent">85%</h3>
+                        <p>Успеваемость</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="featured-section">
+                <h2>Рекомендуем сегодня</h2>
+                <div class="featured-card">
+                    <div class="featured-icon">
+                        <i class="fas fa-quote-right"></i>
+                    </div>
+                    <div class="featured-content">
+                        <h3>Аят дня</h3>
+                        <p class="arabic-text-small">قُلْ هُوَ اللَّهُ أَحَدٌ</p>
+                        <p>"Скажи: «Он - Аллах Единый»" (Аль-Ихлас, 112:1)</p>
+                        <button class="btn-outline btn-sm" id="studyAyahBtn">Изучить этот аят</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Курсы -->
+        <section class="page" id="courses">
+            <div class="page-header">
+                <h2>Наши курсы</h2>
+                <div class="gender-filter">
+                    <button class="gender-btn active" data-gender="all">Все</button>
+                    <button class="gender-btn" data-gender="male">Для братьев</button>
+                    <button class="gender-btn" data-gender="female">Для сестер</button>
+                </div>
+            </div>
+
+            <div class="courses-grid" id="coursesGrid">
+                <!-- Курсы будут загружены через JS -->
+            </div>
+
+            <div class="cta-section">
+                <h3>Не знаете с чего начать?</h3>
+                <p>Пройдите бесплатный пробный урок и определите свой уровень</p>
+                <button class="btn-primary btn-lg" id="trialLessonBtn">
+                    <i class="fas fa-calendar-check"></i>
+                    Записаться на пробный урок
+                </button>
+                <p class="small-text">После нажатия откроется чат с нашим менеджером</p>
+            </div>
+
+            <div class="faq-section">
+                <h3>Частые вопросы</h3>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Нужны ли начальные знания арабского?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Нет, мы принимаем учеников с любым уровнем подготовки, включая полных новичков.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Как проходят занятия?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Занятия проходят онлайн через Zoom. Вы видите преподавателя, учебные материалы и общаетесь в реальном времени.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Карточки -->
+        <section class="page" id="flashcards">
+            <div class="page-header">
+                <h2>Карточки для запоминания</h2>
+                <div class="card-counter">
+                    <span id="cardsLeft">5 карточек сегодня</span>
+                    <button class="btn-outline btn-sm" id="upgradeBtn">
+                        <i class="fas fa-crown"></i> Улучшить
+                    </button>
+                </div>
+            </div>
+
+            <div class="modes">
+                <button class="mode-btn active" data-mode="new">Новые слова</button>
+                <button class="mode-btn" data-mode="review">Повторение</button>
+                <button class="mode-btn" data-mode="test">Тест</button>
+            </div>
+
+            <div class="flashcard-container">
+                <div class="flashcard" id="currentFlashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <div class="arabic-text" id="cardArabic">كِتَابٌ</div>
+                            <p class="hint">Нажмите для перевода</p>
+                            <div class="card-category">
+                                <i class="fas fa-tag"></i> <span id="cardCategory">Существительное</span>
+                            </div>
+                        </div>
+                        <div class="flashcard-back">
+                            <h3 id="cardTranslation">Книга</h3>
+                            <div class="transcription" id="cardTranscription">[китаабун]</div>
+                            <div class="audio-player">
+                                <button class="audio-btn" id="playAudioBtn">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <span>Слушать произношение</span>
+                            </div>
+                            <div class="example">
+                                <p id="cardExample"><strong>Пример:</strong> هذا كتاب جديد (Это новая книга)</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn-outline" id="knowBtn">
+                                    <i class="fas fa-check"></i> Знаю
+                                </button>
+                                <button class="btn-outline" id="dontKnowBtn">
+                                    <i class="fas fa-times"></i> Не знаю
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="cardProgress"></div>
+                </div>
+                <div class="progress-text">
+                    <span>Карточка <span id="currentCardNumber">1</span> из <span id="totalCards">5</span></span>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button class="btn-outline" id="prevCardBtn">
+                        <i class="fas fa-arrow-left"></i> Назад
+                    </button>
+                    <button class="btn-primary" id="nextCardBtn">
+                        Следующая <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-card">
+                <h4>Ваша статистика</h4>
+                <div class="stats-row">
+                    <div>
+                        <strong id="learnedCount">0</strong>
+                        <p>Изучено</p>
+                    </div>
+                    <div>
+                        <strong id="reviewCount">0</strong>
+                        <p>На повторении</p>
+                    </div>
+                    <div>
+                        <strong id="accuracy">0%</strong>
+                        <p>Точность</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="word-categories">
+                <h4>Категории слов</h4>
+                <div class="categories-grid">
+                    <button class="category-btn active" data-category="all">
+                        <i class="fas fa-globe"></i> Все
+                    </button>
+                    <button class="category-btn" data-category="home">
+                        <i class="fas fa-home"></i> Дом
+                    </button>
+                    <button class="category-btn" data-category="food">
+                        <i class="fas fa-utensils"></i> Еда
+                    </button>
+                    <button class="category-btn" data-category="prayer">
+                        <i class="fas fa-mosque"></i> Намаз
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Полезное -->
+        <section class="page" id="useful">
+            <div class="page-header">
+                <h2>Полезное</h2>
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="zikr">Зикр дня</button>
+                    <button class="tab-btn" data-tab="fact">Факт</button>
+                    <button class="tab-btn" data-tab="prayer">Намаз</button>
+                    <button class="tab-btn" data-tab="mosques">Мечети</button>
+                </div>
+            </div>
+
+            <div class="tab-content active" id="zikrTab">
+                <div class="zikr-card">
+                    <div class="zikr-header">
+                        <div class="zikr-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div>
+                            <h3>Зикр дня</h3>
+                            <p class="zikr-subtitle" id="zikrReward">Для очищения сердца</p>
+                        </div>
+                    </div>
+                    <div class="arabic-text large" id="zikrArabic">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</div>
+                    <div class="zikr-content">
+                        <h4 id="zikrTranslation">Свят Аллах и хвала Ему</h4>
+                        <p class="explanation" id="zikrExplanation">Произносится 100 раз в день. Кто скажет это сто раз в день, тому простятся грехи, даже если они будут подобны пене морской.</p>
+                        
+                        <div class="counter-container">
+                            <h4>Счетчик повторений</h4>
+                            <div class="counter">
+                                <button class="counter-btn" id="decreaseCount">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <div class="count-display">
+                                    <span class="count" id="zikrCount">0</span>
+                                    <span class="count-total">/ <span id="zikrTotal">100</span></span>
+                                </div>
+                                <button class="counter-btn" id="increaseCount">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="counter-progress">
+                                <div class="progress-fill" id="zikrProgress"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="zikr-actions">
+                            <button class="btn-outline" id="favoriteZikrBtn">
+                                <i class="far fa-heart"></i> В избранное
+                            </button>
+                            <button class="btn-primary" id="resetZikrBtn">
+                                <i class="fas fa-redo"></i> Сбросить
+                            </button>
+                            <button class="btn-outline" id="shareZikrBtn">
+                                <i class="fas fa-share"></i> Поделиться
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="favorite-zikr">
+                    <h4>Избранные зикры</h4>
+                    <div class="favorite-list" id="favoriteZikrList">
+                        <!-- Будет заполнено через JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="factTab">
+                <div class="fact-card">
+                    <div class="fact-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Знаете ли вы?</h3>
+                    <p id="factText">Пророк Мухаммад (мир ему и благословение) сказал: "Лучшие из вас те, кто изучает Коран и обучает ему других".</p>
+                    <div class="fact-source">
+                        <i class="fas fa-book"></i>
+                        <span id="factSource">Источник: Аль-Бухари</span>
+                    </div>
+                    <div class="fact-actions">
+                        <button class="btn-outline" id="nextFactBtn">
+                            <i class="fas fa-arrow-right"></i> Следующий факт
+                        </button>
+                        <button class="btn-outline" id="saveFactBtn">
+                            <i class="far fa-bookmark"></i> Сохранить
+                        </button>
+                    </div>
+                </div>
+
+                <div class="facts-history">
+                    <h4>Сохраненные факты</h4>
+                    <div class="history-list" id="savedFactsList">
+                        <!-- Будет заполнено через JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="prayerTab">
+                <div class="prayer-card">
+                    <div class="location-info">
+                        <i class="fas fa-location-dot"></i>
+                        <div>
+                            <strong id="currentLocation">Москва, Россия</strong>
+                            <p id="currentDate">Понедельник, 15 Шавваль 1445</p>
+                        </div>
+                        <button class="btn-outline btn-sm" id="updateLocationBtn">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="prayer-times" id="prayerTimes">
+                        <!-- Время намазов будет загружено через JS -->
+                    </div>
+                    
+                    <div class="next-prayer">
+                        <div>
+                            <strong>Следующий намаз:</strong>
+                            <h3 id="nextPrayerName">Фаджр</h3>
+                        </div>
+                        <div class="countdown">
+                            <span id="nextPrayerTime">05:30</span>
+                            <small>через <span id="countdownTimer">3:45:12</span></small>
+                        </div>
+                    </div>
+                    
+                    <div class="prayer-settings">
+                        <h4>Настройки расчета</h4>
+                        <div class="setting">
+                            <label>Мазхаб:</label>
+                            <select id="madhhabSelect">
+                                <option value="1">Ханафи</option>
+                                <option value="2" selected>Шафии</option>
+                                <option value="3">Малики</option>
+                                <option value="4">Ханбали</option>
+                            </select>
+                        </div>
+                        <div class="setting">
+                            <label>Метод расчета:</label>
+                            <select id="methodSelect">
+                                <option value="3" selected>Мусульманская лига мира</option>
+                                <option value="1">Университет исламских наук, Карачи</option>
+                                <option value="2">Исламское общество Северной Америки</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="mosquesTab">
+                <div class="mosques-container">
+                    <div class="map-container">
+                        <div id="map"></div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h4>Фильтры</h4>
+                        <div class="filters">
+                            <label class="checkbox">
+                                <input type="checkbox" id="femaleRoomFilter" checked>
+                                <span>С женским залом</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" id="parkingFilter">
+                                <span>С парковкой</span>
+                            </label>
+                            <label class="checkbox">
+                                <input type="checkbox" id="libraryFilter">
+                                <span>С библиотекой</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mosques-list" id="mosquesList">
+                        <!-- Список мечетей будет загружен через JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Профиль -->
+        <section class="page" id="profile">
+            <div class="profile-header">
+                <div class="avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-info">
+                    <h2 id="profileName">Имя пользователя</h2>
+                    <p class="subtitle">Ученик QuranFlow Academy</p>
+                    <div class="profile-badges">
+                        <span class="badge">Начинающий</span>
+                        <span class="badge">14 дней</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3><i class="fas fa-calendar-alt"></i> Расписание занятий</h3>
+                <div class="schedule" id="scheduleList">
+                    <!-- Расписание будет загружено через JS -->
+                </div>
+                <button class="btn-outline full-width" id="fullScheduleBtn">
+                    <i class="fas fa-external-link-alt"></i> Полное расписание
+                </button>
+            </div>
+
+            <div class="profile-section">
+                <h3><i class="fas fa-chart-line"></i> Прогресс обучения</h3>
+                <div class="progress-chart">
+                    <div class="progress-item">
+                        <span>Арабский язык</span>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        <span>65%</span>
+                    </div>
+                    <div class="progress-item">
+                        <span>Таджвид</span>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                        <span>40%</span>
+                    </div>
+                    <div class="progress-item">
+                        <span>Чтение Корана</span>
+                        <div class="progress-bar-small">
+                            <div class="progress-fill" style="width: 80%"></div>
+                        </div>
+                        <span>80%</span>
+                    </div>
+                </div>
+                <button class="btn-outline full-width" id="detailedStatsBtn">
+                    <i class="fas fa-chart-bar"></i> Подробная статистика
+                </button>
+            </div>
+
+            <div class="profile-section">
+                <h3><i class="fas fa-tasks"></i> Домашние задания</h3>
+                <div class="homework-list" id="homeworkList">
+                    <!-- Домашние задания будут загружены через JS -->
+                </div>
+                <button class="btn-outline full-width" id="allHomeworkBtn">
+                    <i class="fas fa-list"></i> Все задания
+                </button>
+            </div>
+
+            <div class="profile-section">
+                <h3><i class="fas fa-comments"></i> Связь с преподавателем</h3>
+                <div class="contact-teacher">
+                    <button class="btn-outline" id="messageTeacherBtn">
+                        <i class="fas fa-comment-dots"></i> Написать сообщение
+                    </button>
+                    <button class="btn-primary" id="consultationBtn">
+                        <i class="fas fa-phone"></i> Запись на консультацию
+                    </button>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3><i class="fas fa-gift"></i> Реферальная программа</h3>
+                <div class="referral-card">
+                    <div class="referral-header">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <h4>Пригласите друзей</h4>
+                            <p>Получите месяц подписки бесплатно за 3 приглашенных друга</p>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-stats">
+                        <div class="ref-stat">
+                            <strong id="refCount">0</strong>
+                            <p>Приглашено</p>
+                        </div>
+                        <div class="ref-stat">
+                            <strong id="refRemaining">3</strong>
+                            <p>Осталось</p>
+                        </div>
+                        <div class="ref-stat">
+                            <strong id="refReward">0</strong>
+                            <p>Наград</p>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-link">
+                        <label>Ваша реферальная ссылка:</label>
+                        <div class="link-container">
+                            <input type="text" readonly value="https://t.me/quranflow_bot?start=ref_12345" id="referralLink">
+                            <button class="btn-primary" id="copyRefBtn">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="referral-share">
+                        <p>Поделиться:</p>
+                        <div class="share-buttons">
+                            <button class="share-btn telegram" data-platform="telegram">
+                                <i class="fab fa-telegram"></i>
+                            </button>
+                            <button class="share-btn whatsapp" data-platform="whatsapp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <button class="share-btn copy" data-platform="copy">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings">
+                <h3><i class="fas fa-cog"></i> Настройки</h3>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Уведомления</span>
+                        <label class="switch">
+                            <input type="checkbox" id="notificationsToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <i class="fas fa-moon"></i>
+                        <span>Темная тема</span>
+                        <label class="switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <i class="fas fa-language"></i>
+                        <span>Язык интерфейса</span>
+                        <select class="language-select" id="languageSelect">
+                            <option value="ru" selected>Русский</option>
+                            <option value="en">English</option>
+                            <option value="ar">العربية</option>
+                        </select>
+                    </div>
+                    <div class="setting-item" id="privacyBtn">
+                        <i class="fas fa-lock"></i>
+                        <span>Конфиденциальность</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="setting-item" id="helpBtn">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Помощь и поддержка</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+                
+                <div class="logout-section">
+                    <button class="btn-outline" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                    <p class="version">Версия 1.0.0</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Telegram Main Button -->
+    <div class="telegram-btn" id="telegramMainButton">
+        <i class="fas fa-calendar-check"></i>
+        <span>Записаться на урок</span>
     </div>
-    <!-- <h1 class="title">Markaz Takwa</h1>
-  </div>
-  <button class="btn-go-study">Начать изучение слов</button>
-  <button class="ayat-dnya">Аят Дня</button>
-  <input> Найти аят
-  <div class="card"></div>
-    <ul class="tarif">
-      <li>Тарифы</li><br>
-      <li>Премиум</li>
-      <li>Стандарт</li>
-      <li>Базовый(бесплатный)</li>
-    </ul>
-  </div>
-  </div>
-  <div class="card"></div>
-    <ul class="tarif">
-      <li>Тарифы</li><br>
-      <li>Премиум</li>
-      <li>Стандарт</li>
-      <li>Базовый(бесплатный)</li>
-    </ul>
-  </div>
-  <ul>
-    <li>Начать изучение</li>
-  </ul>
-  <div>
-    <p>Коран для brother и sister</p>
-    <input>
-    <p class="find-curs">Найти свой курс</p> -->
-  </div>
+
+    <!-- Модальные окна -->
+    <div class="modal" id="subscriptionModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="closeModalBtn">&times;</button>
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h2>Получите полный доступ</h2>
+                <p>Откройте все возможности обучения</p>
+            </div>
+            
+            <div class="modal-body">
+                <p class="modal-subtitle">Подписка включает:</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> Неограниченные карточки</li>
+                    <li><i class="fas fa-check"></i> Расширенная библиотека зикров</li>
+                    <li><i class="fas fa-check"></i> Оффлайн-режим</li>
+                    <li><i class="fas fa-check"></i> Персональная статистика</li>
+                    <li><i class="fas fa-check"></i> Приоритетная поддержка</li>
+                    <li><i class="fas fa-check"></i> Доступ к эксклюзивным материалам</li>
+                </ul>
+                
+                <div class="pricing">
+                    <div class="price-option active" data-plan="monthly">
+                        <div class="price-header">
+                            <h4>Ежемесячная</h4>
+                            <span class="popular-badge">Популярно</span>
+                        </div>
+                        <div class="price-amount">
+                            <span class="amount">99 ₽</span>
+                            <span class="period">/ месяц</span>
+                        </div>
+                        <p>Оплачивайте каждый месяц</p>
+                    </div>
+                    <div class="price-option" data-plan="yearly">
+                        <div class="price-header">
+                            <h4>Годовая</h4>
+                            <span class="save-badge">Экономия 40%</span>
+                        </div>
+                        <div class="price-amount">
+                            <span class="amount">699 ₽</span>
+                            <span class="period">/ год</span>
+                        </div>
+                        <p>Всего 58 ₽ в месяц</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn-primary btn-lg" id="subscribeBtn">
+                    <i class="fas fa-shopping-cart"></i> Оформить подписку
+                </button>
+                <button class="btn-outline close-modal">
+                    Не сейчас
+                </button>
+                <p class="small-text">Подписка продлевается автоматически. Можно отменить в любой момент.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Уведомление -->
+    <div class="notification-toast" id="notificationToast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Операция выполнена успешно</span>
+        </div>
+    </div>
+
+    <!-- Загрузка данных -->
+    <script src="data/courses.js"></script>
+    <script src="data/flashcards.js"></script>
+    <script src="data/zikr.js"></script>
+    <script src="data/mosques.js"></script>
+    <script src="data/facts.js"></script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
