@@ -88,10 +88,8 @@ body {
 
 .nav-menu {
     display: flex;
-    gap: 4px;
     flex: 1;
     justify-content: center;
-    margin: 0 16px;
 }
 
 .nav-link {
@@ -138,8 +136,8 @@ body {
 
 .user-info {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 10px;
     font-weight: 500;
     color: var(--gray-700);
 }
