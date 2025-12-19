@@ -1,12 +1,6 @@
-# Индивидуальный проект Мухтабалиева Дамира(miniapp in telegram)
+# Индивидуальный проект Мухтабалиева Дамира(miniapp in telegram) (тестовый код, написанный gpt)
 🕌 QuranFlow Academy - Telegram Mini App
 <div align="center">
-https://img.shields.io/badge/Telegram_Mini_App-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white
-https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white
-https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white
-https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black
-https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge
-
 Образовательная платформа для изучения арабского языка и Корана в Telegram
 
 Демо • Функции • Установка • Использование • Разработка
@@ -296,4 +290,8 @@ Telegram за прекрасную платформу Mini Apps
 
 <div align="center">
 ⭐ Если проект вам понравился, поставьте звезду на GitHub!
-https://api.star-history.com/svg?repos=%D0%B2%D0%B0%D1%88-%D0%BB%D0%BE%D0%B3%D0%B8%D0%BD/quranflow-academy&type=Date
+https://github.com/chiksa14/individual-project
+
+Для сотрудничетства и вакансий писать сюда:
+tg: @ch14sa
+vk: @ch14sa
