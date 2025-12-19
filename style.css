@@ -47,6 +47,7 @@ body {
     line-height: 1.6;
     font-size: 14px;
     max-width: 100%;
+    max-height: 100%;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -283,8 +284,9 @@ body {
 }
 
 .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
     gap: 12px;
     margin-top: 20px;
 }
@@ -1076,6 +1078,10 @@ body {
     display: flex;
     gap: 12px;
     justify-content: center;
+}
+
+.zikr-actions button {
+    width: 120px;
 }
 
 .favorite-zikr {
