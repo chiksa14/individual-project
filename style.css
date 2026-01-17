@@ -117,18 +117,6 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
-.nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 4px;
-    background: var(--primary);
-    border-radius: var(--radius-full);
-}
-
 .nav-link span {
     font-size: 0.75rem;
     margin-top: 4px;
